@@ -8,7 +8,7 @@ A modern HR dashboard built with [Next.js](https://nextjs.org), styled using Tai
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/vandanamv/HR-Dashboard.git
    cd hr-dashboard
    ```
 2. **Install dependencies:**
