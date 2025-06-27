@@ -6,16 +6,16 @@ import { assignDepartment, assignRating } from "@/utils/mockData";
 import { useUserStore } from "@/store/useUserStore";
 import UserCard from "@/components/Card/UserCard";
 import CreateUserModal from "@/components/Modal/CreateUserModal";
-import { FaSearch, FaUserPlus } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
+import SearchBar from "@/components/SearchBar/SearchBar";
 
 export default function HomePage() {
   const { users, setUsers } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [selectedRatings, setSelectedRatings] = useState([]);
+  const [filters, setFilters] = useState({ departments: [], ratings: [] });
   const [isDark, setIsDark] = useState(false);
 
   // Sync theme from localStorage
@@ -62,8 +62,6 @@ export default function HomePage() {
     load();
   }, [setUsers, users.length]);
 
-  const departments = [...new Set(users.map((u) => u.department))];
-
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -72,87 +70,25 @@ export default function HomePage() {
       user.department.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesDept =
-      selectedDepartments.length === 0 ||
-      selectedDepartments.includes(user.department);
+      filters.departments.length === 0 ||
+      filters.departments.includes(user.department);
 
     const matchesRating =
-      selectedRatings.length === 0 ||
-      selectedRatings.includes(user.rating);
+      filters.ratings.length === 0 ||
+      filters.ratings.includes(user.rating);
 
     return matchesSearch && matchesDept && matchesRating;
   });
 
-  const toggleSelection = (value, setter, current) => {
-    setter(
-      current.includes(value)
-        ? current.filter((v) => v !== value)
-        : [...current, value]
-    );
-  };
-
   return (
     <Layout isDark={isDark} toggleTheme={toggleTheme}>
-      {/* Search and Filters */}
-      <div className="flex flex-wrap items-center gap-4 mb-6">
-        <div className="relative w-full md:w-1/3">
-          <input
-            type="text"
-            placeholder="Search by name, email or department..."
-            className="w-full p-2 pl-10 rounded border dark:bg-gray-800"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <FaSearch className="absolute top-3 left-3 text-gray-400" />
-        </div>
-
-        {/* Departments */}
-        <div>
-          <label className="block text-sm font-semibold mb-1">
-            Filter by Department:
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {departments.map((dept) => (
-              <button
-                key={dept}
-                onClick={() =>
-                  toggleSelection(dept, setSelectedDepartments, selectedDepartments)
-                }
-                className={`px-3 py-1 rounded-full border text-sm ${
-                  selectedDepartments.includes(dept)
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 dark:bg-gray-700"
-                }`}
-              >
-                {dept}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Ratings */}
-        <div>
-          <label className="block text-sm font-semibold mb-1">
-            Filter by Rating:
-          </label>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <button
-                key={rating}
-                onClick={() =>
-                  toggleSelection(rating, setSelectedRatings, selectedRatings)
-                }
-                className={`px-2 py-1 rounded border text-sm ${
-                  selectedRatings.includes(rating)
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-200 dark:bg-gray-700"
-                }`}
-              >
-                {rating}⭐
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <SearchBar
+        search={searchTerm}
+        setSearch={setSearchTerm}
+        filters={filters}
+        setFilters={setFilters}
+        users={users}
+      />
 
       {/* Users */}
       {filteredUsers.length === 0 ? (

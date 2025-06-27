@@ -1,49 +1,28 @@
-//src/app/settings/page.js
-"use client";
+ "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function SettingsPage() {
-  const [userEmail, setUserEmail] = useState("");
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState("User");
   const [editing, setEditing] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [newName, setNewName] = useState("User");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [language, setLanguage] = useState("English");
   const fileInputRef = useRef(null);
-  const [isDark, setIsDark] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const email = localStorage.getItem("mock-email");
-    const name = localStorage.getItem("mock-name");
-    const avatar = localStorage.getItem("mock-avatar");
-    const darkTheme = localStorage.getItem("mock-theme") === "dark";
-
-    if (!email) {
-      router.push("/login");
-    } else {
-      setUserEmail(email);
-      setUserName(name || "User");
-      setNewName(name || "");
-      setAvatarUrl(avatar);
-      setIsDark(darkTheme);
-      document.documentElement.classList.toggle("dark", darkTheme);
-    }
-  }, [router]);
+    // Generate a random avatar URL
+    const randomAvatarUrl = `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`;
+    setAvatarUrl(randomAvatarUrl);
+  }, []);
 
   const handleSave = () => {
-    localStorage.setItem("mock-name", newName);
     setUserName(newName);
     setEditing(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("mock-email");
-    localStorage.removeItem("mock-name");
-    localStorage.removeItem("mock-avatar");
-    localStorage.removeItem("mock-theme");
-    router.push("/login");
   };
 
   const handleAvatarUpload = (e) => {
@@ -51,97 +30,119 @@ export default function SettingsPage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const url = reader.result;
-        setAvatarUrl(url);
-        localStorage.setItem("mock-avatar", url);
+        setAvatarUrl(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    localStorage.setItem("mock-theme", newTheme ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", newTheme);
+  const toggleNotifications = () => {
+    setNotificationsEnabled(!notificationsEnabled);
+  };
+
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+  };
+
+  const goToHomepage = () => {
+    router.push('/');
   };
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">⚙️ Profile Settings</h1>
-      <div className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-6">
-        <div className="flex items-center space-x-4">
-          <img
-            src={avatarUrl || "/default-avatar.png"}
-            alt="Avatar"
-            className="w-16 h-16 rounded-full object-cover border"
-          />
-          <button
-            onClick={() => fileInputRef.current.click()}
-            className="text-sm text-blue-500 hover:underline"
-          >
-            Change Avatar
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*"
-            onChange={handleAvatarUpload}
-          />
-        </div>
-
-        <div>
-          <label className="font-semibold block text-sm">Name:</label>
-          {editing ? (
-            <div className="flex items-center space-x-2">
-              <input
-                className="p-1 rounded border dark:bg-gray-700 dark:text-white"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-              />
-              <button
-                onClick={handleSave}
-                className="bg-green-600 text-white px-2 py-1 rounded"
-              >
-                Save
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <p className="text-lg text-blue-700 dark:text-blue-300">{userName}</p>
-              <button
-                onClick={() => setEditing(true)}
-                className="text-sm text-blue-500 hover:underline"
-              >
-                Edit
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div>
-          <label className="font-semibold block text-sm">Email:</label>
-          <p className="text-gray-700 dark:text-gray-200">{userEmail}</p>
-        </div>
-
-        <div>
-          <label className="font-semibold block text-sm">Theme:</label>
-          <button
-            onClick={toggleTheme}
-            className="px-3 py-1 rounded border text-sm mt-2 bg-gray-100 dark:bg-gray-700 dark:text-white"
-          >
-            Switch to {isDark ? "Light" : "Dark"}
-          </button>
-        </div>
-
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded mt-4"
-        >
-          Logout
+    <main className="p-6 max-w-3xl mx-auto bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <div className="flex items-center mb-6">
+        <button onClick={goToHomepage} className="mr-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+          <FaArrowLeft size={24} />
         </button>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Settings</h1>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md space-y-6">
+        <section className="border-b border-gray-200 dark:border-gray-700 pb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Personal Information</h2>
+          <div className="flex flex-col items-center sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+            <img
+              src={avatarUrl}
+              alt="Avatar"
+              className="w-24 h-24 rounded-full object-cover border-2 border-blue-500"
+            />
+            <div>
+              <button
+                onClick={() => fileInputRef.current.click()}
+                className="text-sm text-blue-500 dark:text-blue-400 hover:underline mt-2"
+              >
+                Change Avatar
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="font-semibold block text-sm mb-1 text-gray-600 dark:text-gray-400"></label>
+            {editing ? (
+              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                <input
+                  className="p-2 rounded border w-full max-w-xs border-gray-300 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                />
+                <button
+                  onClick={handleSave}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-150"
+                >
+                  Save
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+                <p className="text-lg text-gray-800 dark:text-gray-200">{userName}</p>
+                <button
+                  onClick={() => setEditing(true)}
+                  className="text-sm text-blue-500 dark:text-blue-400 hover:underline"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="border-b border-gray-200 dark:border-gray-700 pb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Notification Settings</h2>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="notifications"
+              checked={notificationsEnabled}
+              onChange={toggleNotifications}
+              className="rounded text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="notifications" className="text-sm text-gray-700 dark:text-gray-300">
+              Enable Notifications
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Language Settings</h2>
+          <select
+            value={language}
+            onChange={handleLanguageChange}
+            className="p-2 rounded border w-full max-w-xs border-gray-300 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          >
+            <option value="English" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">English</option>
+            <option value="Spanish" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">Spanish</option>
+            <option value="French" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">French</option>
+            <option value="German" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">German</option>
+          </select>
+        </section>
       </div>
     </main>
   );
 }
+

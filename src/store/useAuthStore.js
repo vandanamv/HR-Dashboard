@@ -1,6 +1,7 @@
-// store/useAuthStore.js
+// src/store/useAuthStore.js
 import { create } from 'zustand';
 
+// Create the store
 const useAuthStore = create((set) => ({
   isAuthenticated: false,
   login: (email, password) => {
@@ -25,4 +26,5 @@ const useAuthStore = create((set) => ({
   },
 }));
 
+// Export the store as a default export
 export default useAuthStore;

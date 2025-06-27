@@ -3,12 +3,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useAuthStore from "@/store/useAuthStore"; // Ensure this path is correct
+import useAuthStore from "@/store/useAuthStore"; // Import the default export
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated } = useAuthStore();
+  const { login } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

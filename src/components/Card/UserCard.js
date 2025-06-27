@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaStar,FaCheck } from "react-icons/fa";
+import { FaStar, FaCheck } from "react-icons/fa";
 import { useBookmarkStore } from "@/store/useBookmarkStore";
 
 export default function UserCard({ user, onPromote, onDemote }) {
@@ -61,19 +61,19 @@ export default function UserCard({ user, onPromote, onDemote }) {
       </div>
 
       <div className="flex flex-wrap gap-2 mt-4 items-center">
-        <a href={`/employee/${user.id}`} className="text-blue-600 hover:text-blue-800 flex items-center">
+        <a href={`/employee/${user.id}`} className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-2 py-1 rounded-full flex items-center">
            View
         </a>
-        <button onClick={toggleBookmark} className="text-blue-600 hover:text-blue-800 flex items-center">
+        <button onClick={toggleBookmark} className="text-green-600 hover:text-green-800 hover:bg-green-100 px-2 py-1 rounded-full flex items-center">
            {isBookmarked ? "Remove" : "Bookmark"}
         </button>
         {!isPromoted ? (
-          <button onClick={handlePromote} className="text-blue-600 hover:text-blue-800 flex items-center">
+          <button onClick={handlePromote} className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100 px-2 py-1 rounded-full flex items-center">
             Promote
           </button>
         ) : (
           <>
-            <button onClick={handleDemote} className="text-red-600 hover:text-red-800 flex items-center">
+            <button onClick={handleDemote} className="text-red-600 hover:text-red-800 hover:bg-red-100 px-2 py-1 rounded-full flex items-center">
               Demote
             </button>
           </>

@@ -1,17 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { FaSearch } from "react-icons/fa";
 
 export default function SearchBar({ search, setSearch, filters, setFilters, users }) {
-  const [uniqueDepartments, setUniqueDepartments] = useState([]);
-  const [uniqueRatings, setUniqueRatings] = useState([]);
-
-  useEffect(() => {
-    const depts = [...new Set(users.map((u) => u.department))];
-    const ratings = [...new Set(users.map((u) => u.rating))];
-    setUniqueDepartments(depts);
-    setUniqueRatings(ratings.sort((a, b) => a - b));
-  }, [users]);
+  const uniqueDepartments = [...new Set(users.map((u) => u.department))];
+  const uniqueRatings = [...new Set(users.map((u) => u.rating))].sort((a, b) => a - b);
 
   const toggleFilter = (type, value) => {
     setFilters((prev) => {
@@ -24,17 +18,20 @@ export default function SearchBar({ search, setSearch, filters, setFilters, user
 
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow mb-4 space-y-4">
-      <input
-        type="text"
-        placeholder="Search by name, email, or department"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md"
-      />
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search by name, email, or department"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full p-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-md"
+        />
+        <FaSearch className="absolute top-3 left-3 text-gray-400" />
+      </div>
 
       <div className="flex gap-4 flex-wrap">
         <div>
-          <label className="block font-semibold mb-1">Filter by Department:</label>
+          <label className="block font-semibold mb-1"></label>
           <select
             className="p-2 border rounded dark:bg-gray-700 dark:text-white"
             onChange={(e) => toggleFilter("departments", e.target.value)}
@@ -49,7 +46,6 @@ export default function SearchBar({ search, setSearch, filters, setFilters, user
               </option>
             ))}
           </select>
-          {/* Show selected as badges */}
           <div className="mt-2 flex flex-wrap gap-2">
             {filters.departments.map((dept) => (
               <span
@@ -64,7 +60,7 @@ export default function SearchBar({ search, setSearch, filters, setFilters, user
         </div>
 
         <div>
-          <label className="block font-semibold mb-1">Filter by Rating:</label>
+          <label className="block font-semibold mb-1"></label>
           <select
             className="p-2 border rounded dark:bg-gray-700 dark:text-white"
             onChange={(e) => toggleFilter("ratings", parseInt(e.target.value))}

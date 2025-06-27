@@ -16,33 +16,26 @@ export default function Layout({ children, isDark, toggleTheme }) {
       <div className="p-6 max-w-7xl mx-auto">
         {/* Topbar with icons */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">HR Dashboard</h1>
-          <div className="flex gap-4 text-xl text-gray-600 dark:text-gray-300 items-center">
+          <h1 className="text-3xl font-bold">User Management</h1>
+          <div className="flex gap-4 text-xl items-center">
             <motion.div whileHover={{ scale: 1.2 }} title="Bookmarks">
-              <Link href="/bookmarks" className="relative">
-                <FaBookmark className="hover:text-yellow-500" />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
-                  !
-                </span>
+              <Link href="/bookmarks" className="flex items-center px-3 py-1 rounded-full text-purple-500 hover:bg-purple-200 transition-all">
+                <FaBookmark />
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.2 }} title="Analytics">
-              <Link href="/analytics">
-                <FaChartBar className="hover:text-green-500" />
+              <Link href="/analytics" className="flex items-center px-3 py-1 rounded-full text-green-500 hover:bg-green-100 transition-all">
+                <FaChartBar />
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.2 }} title="Settings">
-              <Link href="/settings">
-                <FaUserCog className="hover:text-blue-500" />
+              <Link href="/settings" className="flex items-center px-3 py-1 rounded-full text-blue-500 hover:bg-blue-100 transition-all">
+                <FaUserCog />
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.2 }} title="Toggle Theme">
-              <button onClick={toggleTheme}>
-                {isDark ? (
-                  <FaSun className="hover:text-yellow-400 transition" />
-                ) : (
-                  <FaMoon className="hover:text-gray-600 transition" />
-                )}
+              <button onClick={toggleTheme} className="flex items-center px-3 py-1 rounded-full text-yellow-500 hover:bg-yellow-100 transition-all">
+                {isDark ? <FaSun /> : <FaMoon />}
               </button>
             </motion.div>
           </div>
